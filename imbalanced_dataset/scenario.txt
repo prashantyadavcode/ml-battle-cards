@@ -1,0 +1,33 @@
+Q1. Your fraud detection model has 98% accuracy but your manager is unhappy. Why?
+
+The model is likely predicting everything as "not fraud." With only 2% fraud cases, always predicting non-fraud gives 98% accuracy but 0% fraud detection — which is completely useless. I'd immediately look at the confusion matrix and switch to F1-score and Recall as evaluation metrics, since catching actual fraud (recall) matters more than overall accuracy.
+
+
+Q2. You applied SMOTE but your model performance got worse. What went wrong?
+
+Most likely, SMOTE was applied before train-test split or outside the pipeline — causing data leakage. Synthetic samples generated from the full dataset bleed information into the test set. The fix is to always apply SMOTE inside a pipeline so it only runs on training folds during cross-validation, never touching the test set.
+
+
+Q3. You have a medical dataset — 99% healthy, 1% cancer. What's your approach?
+
+Here recall for the cancer class is critical — a false negative (missing cancer) is far worse than a false positive. I would use class_weight='balanced', apply SMOTE, lower the decision threshold below 0.5 to maximize recall, and evaluate using PR-AUC. I'd also use StratifiedKFold to ensure each fold maintains the 1% ratio.
+
+
+Q4. Why not just duplicate minority samples instead of SMOTE?
+
+Simple duplication causes overfitting on minority samples — the model just memorizes those exact points. SMOTE creates synthetic samples by interpolating between existing minority instances, adding diversity and helping the model generalize better to unseen minority cases.
+
+
+Q5. When would you prefer undersampling over oversampling?
+
+When the majority class is extremely large (millions of samples) and computation is a constraint. Undersampling reduces training time significantly. However, it risks losing important majority class patterns. A combined approach like SMOTETomek is usually safer — it oversamples minority while removing noisy majority samples near the boundary.
+
+
+Q6. Your model has high recall but very low precision on minority class. What does that mean and is it acceptable?
+
+High recall means we're catching most actual positives but low precision means many false alarms. Whether it's acceptable depends on business context. In cancer detection — yes, acceptable, missing a case is worse. In spam filtering — no, flagging too many legitimate emails as spam is harmful. Always align the precision-recall tradeoff with business cost of each error type.
+
+
+Q7. How do you handle imbalance in a multi-class problem?
+
+Use average='macro' or average='weighted' in F1-score to evaluate all classes fairly. Apply SMOTE per class using SMOTE with k_neighbors tuned per class size. Set class_weight='balanced' in the model. For severe imbalance, treat it as One-vs-Rest binary classification per class.
