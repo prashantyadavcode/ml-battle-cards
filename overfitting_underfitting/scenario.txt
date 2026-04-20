@@ -1,0 +1,33 @@
+Q1. Your model has 99% train accuracy and 60% test accuracy. What's wrong and how do you fix it?
+
+Classic overfitting — large gap between train and test performance. The model has memorized training data including noise. I'd first apply L2 regularization, then try cross-validation to get a reliable performance estimate, reduce model complexity, and if it's deep learning, add dropout and early stopping.
+
+
+Q2. Your model has 60% train accuracy and 61% test accuracy. What's the problem?
+
+This is underfitting — the model performs poorly on both sets with almost no gap. It's too simple to capture the underlying patterns. I'd try a more complex model, do feature engineering, reduce regularization, or train longer.
+
+
+Q3. How do you know when to stop training a neural network?
+
+I monitor validation loss alongside training loss. When training loss keeps decreasing but validation loss starts increasing — that's the overfitting point. I use early stopping with a patience parameter (e.g. stop after 10 epochs of no val loss improvement) and restore the best weights.
+
+
+Q4. What is L1 vs L2 regularization and when do you use each?
+
+L1 (Lasso) adds absolute value of weights as penalty — drives some weights to exactly zero, acting as automatic feature selection. Use when you suspect many irrelevant features. L2 (Ridge) adds squared weights as penalty — shrinks all weights but rarely to zero, good for handling multicollinearity. ElasticNet combines both.
+
+
+Q5. You added more training data but overfitting didn't reduce. Why?
+
+More data alone doesn't always fix overfitting if the model complexity is too high relative to signal in data. I'd combine more data with regularization, dropout, or reducing model depth. Also check if the new data is representative — adding similar noisy data won't help.
+
+
+Q6. How does cross-validation help detect overfitting?
+
+If a model scores 99% on training fold but drops significantly on validation fold consistently across all K folds, that's a clear overfitting signal. Cross-validation gives a more reliable generalization estimate than a single train-test split, especially on small datasets.
+
+
+Q7. Can a model overfit even with regularization applied?
+
+Yes — if regularization strength (lambda) is too low, it won't constrain the model enough. Also, if the dataset is very small and model very complex, even strong regularization may not fully prevent overfitting. In that case, data augmentation or a simpler architecture is needed alongside regularization.
