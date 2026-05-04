@@ -1,0 +1,27 @@
+# Model Not Converging
+
+# Core concept - training loss steadily decreases and stabilizes at a minimum
+# Not Converging - loss is not decreasing, oscillating, exploding or stuck
+# Happens mostly in NN, gradient descent based models
+# Root cause is almost always learning rate, data or architecture
+
+# Types of Convergence Problems - 
+
+# Loss not decreasing at all - LR too low, vanshing gradient, bad limit
+# Loss oscillating widly - LR too high
+# Loss exploding (NaN/Inf) - LR way too high, gradient explosion
+# Loss decreasing then plateaus - stuck in local minima or saddle point
+# Loss decreasing slowly - LR too low or poor optimizer choice
+# Val loss increases, train decreases - overfitting, not convergence issue
+
+# Root Causes & Fixes - 
+
+# Learning rate too high/low - LR scheduler, LR finder
+# Vanishing gradient - ReLU, BatchNorm, residual connections
+# Exploding gradient - gradient clipping
+# Poor weight intialization - He/Xavier intialization
+# Unnormalized Input data - StandardScaler, MinMaxScaler
+# Wrong optimizer - switch to Adam from SGD
+# Bad batch size - Tune batch size
+# Dying ReLU - Use Leaky ReLU or ELU
+
